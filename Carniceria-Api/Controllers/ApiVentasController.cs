@@ -25,7 +25,7 @@ namespace Carniceria_Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Venta>>> GetVentas()
         {
-          if (!_context.Ventas.Any())
+          if (_context.Ventas == null)
           {
               return NotFound();
           }
@@ -36,7 +36,7 @@ namespace Carniceria_Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Venta>> GetVenta(int id)
         {
-          if (!_context.Ventas.Any())
+          if (_context.Ventas == null)
           {
               return NotFound();
           }
@@ -86,7 +86,7 @@ namespace Carniceria_Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Venta>> PostVenta(Venta venta)
         {
-          if (!_context.Ventas.Any())
+          if (_context.Ventas == null)
           {
               return Problem("Entity set 'SmartsofTomasbenitezContext.Ventas'  is null.");
           }
@@ -100,7 +100,7 @@ namespace Carniceria_Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVenta(int id)
         {
-            if (!_context.Ventas.Any())
+            if (_context.Ventas == null)
             {
                 return NotFound();
             }
