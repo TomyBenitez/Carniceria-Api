@@ -81,14 +81,14 @@ public partial class SmartsofTomasbenitezContext : DbContext
             entity.Property(e => e.Id).HasColumnType("int(11)");
             entity.Property(e => e.ClienteId).HasColumnType("int(11)");
             entity.Property(e => e.CobradorId).HasColumnType("int(11)");
-            entity.Property(e => e.Fecha).HasMaxLength(6);
             entity.Property(e => e.ProductosId).HasColumnType("int(11)");
+            entity.Property(e => e.Fecha).HasMaxLength(6);
 
-            //entity.HasOne(d => d.ClienteId).WithMany(p => p.Ventas).HasForeignKey(d => d.ClienteId);
+            entity.HasOne(v => v.Cliente).WithMany(c => c.Ventas).HasForeignKey(v => v.ClienteId);
 
-            //entity.HasOne(d => d.CobradorId).WithMany(p => p.Ventas).HasForeignKey(d => d.CobradorId);
+            entity.HasOne(v => v.Cobrador).WithMany(c => c.Ventas).HasForeignKey(v => v.CobradorId);
 
-            //entity.HasOne(d => d.ClienteId).WithMany(p => p.Ventas).HasForeignKey(d => d.ProductosId);
+            entity.HasOne(v => v.Producto).WithMany(p => p.Ventas).HasForeignKey(v => v.ProductosId);
         });
 
         OnModelCreatingPartial(modelBuilder);

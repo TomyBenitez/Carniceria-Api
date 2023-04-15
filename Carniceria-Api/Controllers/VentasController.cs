@@ -22,9 +22,8 @@ namespace Carniceria_Api.Controllers
         // GET: Ventas
         public async Task<IActionResult> Index()
         {
-              return _context.Ventas != null ? 
-                          View(await _context.Ventas.ToListAsync()) :
-                          Problem("Entity set 'SmartsofTomasbenitezContext.Ventas'  is null.");
+            var smartsofTomasbenitezContext = _context.Ventas.Include(v => v.Cliente).Include(v => v.Cobrador).Include(v => v.Producto);
+            return View(await smartsofTomasbenitezContext.ToListAsync());
         }
 
         // GET: Ventas/Details/5
@@ -36,6 +35,9 @@ namespace Carniceria_Api.Controllers
             }
 
             var venta = await _context.Ventas
+                .Include(v => v.Cliente)
+                .Include(v => v.Cobrador)
+                .Include(v => v.Producto)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (venta == null)
             {
@@ -48,6 +50,9 @@ namespace Carniceria_Api.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
+            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id");
+            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id");
             return View();
         }
 
@@ -56,14 +61,29 @@ namespace Carniceria_Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CobradorId,ClienteId,ProductosId,Fecha")] Venta venta)
+        public async Task<IActionResult> Create(Venta venta)
         {
-            if (ModelState.IsValid)
+            if (venta != null)
             {
                 _context.Add(venta);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            else
+            {
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        // Aquí puedes hacer lo que necesites con el error, como imprimirlo en la consola o enviarlo a una página de error.
+                        Console.WriteLine("Error en el modelo: " + error.ErrorMessage);
+                    }
+                }
+            }
+
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
+            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
+            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -80,6 +100,9 @@ namespace Carniceria_Api.Controllers
             {
                 return NotFound();
             }
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
+            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
+            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -88,14 +111,14 @@ namespace Carniceria_Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CobradorId,ClienteId,ProductosId,Fecha")] Venta venta)
+        public async Task<IActionResult> Edit(int id, Venta venta)
         {
             if (id != venta.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (venta != null)
             {
                 try
                 {
@@ -115,6 +138,9 @@ namespace Carniceria_Api.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
+            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
+            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -127,6 +153,9 @@ namespace Carniceria_Api.Controllers
             }
 
             var venta = await _context.Ventas
+                .Include(v => v.Cliente)
+                .Include(v => v.Cobrador)
+                .Include(v => v.Producto)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (venta == null)
             {
