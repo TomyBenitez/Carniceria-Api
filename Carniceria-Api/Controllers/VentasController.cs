@@ -22,8 +22,9 @@ namespace Carniceria_Api.Controllers
         // GET: Ventas
         public async Task<IActionResult> Index()
         {
-            var smartsofTomasbenitezContext = _context.Ventas.Include(v => v.Cliente).Include(v => v.Cobrador).Include(v => v.Productos);
-            return View(await smartsofTomasbenitezContext.ToListAsync());
+              return _context.Ventas != null ? 
+                          View(await _context.Ventas.ToListAsync()) :
+                          Problem("Entity set 'SmartsofTomasbenitezContext.Ventas'  is null.");
         }
 
         // GET: Ventas/Details/5
@@ -35,9 +36,6 @@ namespace Carniceria_Api.Controllers
             }
 
             var venta = await _context.Ventas
-                .Include(v => v.Cliente)
-                .Include(v => v.Cobrador)
-                .Include(v => v.Productos)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (venta == null)
             {
@@ -50,9 +48,6 @@ namespace Carniceria_Api.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id");
-            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id");
-            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id");
             return View();
         }
 
@@ -69,9 +64,6 @@ namespace Carniceria_Api.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
-            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
-            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -88,9 +80,6 @@ namespace Carniceria_Api.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
-            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
-            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -126,9 +115,6 @@ namespace Carniceria_Api.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Id", venta.ClienteId);
-            ViewData["CobradorId"] = new SelectList(_context.Cobradors, "Id", "Id", venta.CobradorId);
-            ViewData["ProductosId"] = new SelectList(_context.Productos, "Id", "Id", venta.ProductosId);
             return View(venta);
         }
 
@@ -141,9 +127,6 @@ namespace Carniceria_Api.Controllers
             }
 
             var venta = await _context.Ventas
-                .Include(v => v.Cliente)
-                .Include(v => v.Cobrador)
-                .Include(v => v.Productos)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (venta == null)
             {

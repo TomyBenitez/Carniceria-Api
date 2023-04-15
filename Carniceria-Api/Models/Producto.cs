@@ -11,5 +11,5 @@ public partial class Producto
 
     public decimal Monto { get; set; }
 
-    public virtual ICollection<Venta> Venta { get; } = new List<Venta>();
+    public virtual ICollection<Venta> Ventas { get; } = new List<Venta>();
 }
