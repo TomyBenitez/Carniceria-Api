@@ -14,7 +14,7 @@ public partial class Venta
     [Required(ErrorMessage = "El campo Productos es requerido.")]
     public int ProductosId { get; set; }
     public DateTime Fecha { get; set; }
-    public virtual Producto Producto { get; set; } = null!;
-    public virtual Cliente Cliente { get; set; } = null!;
-    public virtual Cobrador Cobrador { get; set; } = null!;
+    public virtual Producto? Producto { get; set; } = null!;
+    public virtual Cliente? Cliente { get; set; } = null!;
+    public virtual Cobrador? Cobrador { get; set; } = null!;
 }
